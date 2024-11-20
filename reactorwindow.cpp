@@ -56,23 +56,27 @@ ReactorWindow::ReactorWindow(QWidget *parent)
 
     simulationTimer = new QTimer(this);
     connect(simulationTimer, &QTimer::timeout, this, &ReactorWindow::updateSimulation);
-    simulationTimer->start(50);
+    simulationTimer->start(100);
 }
 
 ReactorWindow::~ReactorWindow() {}
 
+void ReactorWindow::updatePowerChart(int elapsedTime, double power) {
+    powerSeries->append(elapsedTime, power);
+    powerChartView->chart()->axes(Qt::Horizontal).first()->setRange(0, elapsedTime);
+}
+
 void ReactorWindow::updateSimulation() {
     int position = controlSlider->value();
 
-    power = 0.1 * position * position;
-    temperature = 20 + 0.05 * power;
+    power = POWER_SCALING * position * position;
+    temperature = TEMP_OFFSET + TEMP_SCALING * power;
 
     powerLabel->setText(QString("Puissance : %1 MW").arg(power, 0, 'f', 1));
     temperatureLabel->setText(QString("Température : %1°C").arg(temperature, 0, 'f', 1));
 
     static int elapsedTime = 0;
-    elapsedTime += 100;
-    powerSeries->append(elapsedTime, power);
+    elapsedTime += TIMER_INTERVAL;
 
-    powerChartView->chart()->axes(Qt::Horizontal).first()->setRange(0, elapsedTime);
+    updatePowerChart(elapsedTime, power);
 }

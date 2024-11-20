@@ -73,6 +73,5 @@ set(TEST_SOURCES
 )
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
 add_executable(QTReactorTests ${TEST_SOURCES})
-target_link_libraries(QTReactorTests PRIVATE Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Charts)
+target_link_libraries(QTReactorTests PRIVATE Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 add_test(NAME QTReactorTests COMMAND QTReactorTests)

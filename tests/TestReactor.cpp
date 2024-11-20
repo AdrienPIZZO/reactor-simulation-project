@@ -23,7 +23,7 @@ void TestReactor::testUpdateSimulation() {
     QVERIFY(temperatureLabel);
 
     slider->setValue(10);
-    QTest::qWait(100);
+    QTest::qWait(TIMER_INTERVAL);
 
     std::cout << powerLabel->text().toStdString() << std::endl;
 
@@ -42,7 +42,7 @@ void TestReactor::testDynamicGraph() {
     QVERIFY(slider);
 
     slider->setValue(10);
-    QTest::qWait(100);
+    QTest::qWait(TIMER_INTERVAL);
 
     auto *series = qobject_cast<QLineSeries*>(chart->series().at(0));
     QVERIFY(series);
