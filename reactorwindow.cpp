@@ -11,9 +11,13 @@ ReactorWindow::ReactorWindow(QWidget *parent)
 
     controlSlider = new QSlider(Qt::Horizontal, this);
     controlSlider->setRange(0, 100);
+    controlSlider->setObjectName("controlSlider");
 
     powerLabel = new QLabel("Puissance : 0 MW", this);
+    powerLabel->setObjectName("powerLabel");
+
     temperatureLabel = new QLabel("Température : 20°C", this);
+    temperatureLabel->setObjectName("temperatureLabel");
 
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
