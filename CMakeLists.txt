@@ -9,9 +9,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Recherche de Qt, y compris QtTest pour les tests unitaires
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR}Charts)
 
 set(PROJECT_SOURCES
     main.cpp
@@ -19,7 +19,6 @@ set(PROJECT_SOURCES
     reactorwindow.h
 )
 
-# Cible principale : l'application
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Reactor
         MANUAL_FINALIZATION
@@ -37,9 +36,8 @@ else()
     endif()
 endif()
 
-target_link_libraries(Reactor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Reactor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 
-# Ajout des paramètres d'application (MacOS, Windows, etc.)
 if(${QT_VERSION} VERSION_LESS 6.1.0)
   set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Reactor)
 endif()
@@ -75,5 +73,6 @@ set(TEST_SOURCES
 )
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
 add_executable(QTReactorTests ${TEST_SOURCES})
-target_link_libraries(QTReactorTests PRIVATE Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(QTReactorTests PRIVATE Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Charts)
 add_test(NAME QTReactorTests COMMAND QTReactorTests)

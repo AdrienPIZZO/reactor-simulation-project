@@ -12,6 +12,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void testUpdateSimulation();
+    void testDynamicGraph();
 
 private:
     ReactorWindow *calc;

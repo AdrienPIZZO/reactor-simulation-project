@@ -6,6 +6,8 @@
 #include <QSlider>
 #include <QLabel>
 #include <QTimer>
+#include <QChartView>
+#include <QLineSeries>
 
 class ReactorWindow : public QMainWindow
 {
@@ -24,6 +26,8 @@ private:
     QLabel *powerLabel;
     QLabel *temperatureLabel;
     QTimer *simulationTimer;
+    QChartView *powerChartView;
+    QLineSeries *powerSeries;
 
     double power;
     double temperature;

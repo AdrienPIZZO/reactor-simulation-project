@@ -1,4 +1,6 @@
 #include <QtTest>
+#include <QChartView>
+#include <QLineSeries>
 #include <iostream>
 #include "TestReactor.h"
 
@@ -27,6 +29,24 @@ void TestReactor::testUpdateSimulation() {
 
     QVERIFY(powerLabel->text() == "Puissance : 10.0 MW");
     QVERIFY(temperatureLabel->text() == "Température : 20.5°C");
+}
+
+void TestReactor::testDynamicGraph() {
+    QChartView *chartView = calc->findChild<QChartView*>("powerChartView");
+    QVERIFY(chartView);
+
+    QChart *chart = chartView->chart();
+    QVERIFY(chart);
+
+    QSlider *slider = calc->findChild<QSlider*>("controlSlider");
+    QVERIFY(slider);
+
+    slider->setValue(10);
+    QTest::qWait(100);
+
+    auto *series = qobject_cast<QLineSeries*>(chart->series().at(0));
+    QVERIFY(series);
+    QVERIFY(series->count() > 0);
 }
 
 QTEST_MAIN(TestReactor)
