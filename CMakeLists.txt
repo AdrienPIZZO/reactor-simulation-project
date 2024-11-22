@@ -14,9 +14,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR}Charts)
 
 set(PROJECT_SOURCES
-    main.cpp
-    reactorwindow.cpp
-    reactorwindow.h
+    src/main.cpp
+    src/reactorwindow.cpp
+    src/reactorwindow.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -68,8 +68,8 @@ enable_testing()
 set(TEST_SOURCES
     tests/TestReactor.cpp
     tests/TestReactor.h
-    reactorwindow.cpp
-    reactorwindow.h
+    src/reactorwindow.cpp
+    src/reactorwindow.h
 )
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
 add_executable(QTReactorTests ${TEST_SOURCES})

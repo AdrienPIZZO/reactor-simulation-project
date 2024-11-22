@@ -2,7 +2,7 @@
 #define TEST_REACTOR_H
 
 #include <QtTest>
-#include "../reactorwindow.h"
+#include "../src/reactorwindow.h"
 
 class TestReactor : public QObject
 {
