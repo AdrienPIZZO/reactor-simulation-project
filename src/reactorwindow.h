@@ -1,6 +1,7 @@
 #ifndef REACTORWINDOW_H
 #define REACTORWINDOW_H
 
+#include "reactor.h"
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QSlider>
@@ -9,23 +10,19 @@
 #include <QChartView>
 #include <QLineSeries>
 
-constexpr int TIMER_INTERVAL = 100;
-constexpr double POWER_SCALING = 0.1;
-constexpr double TEMP_OFFSET = 20;
-constexpr double TEMP_SCALING = 0.05;
-
 class ReactorWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    ReactorWindow(QWidget *parent = nullptr);
+    ReactorWindow(QWidget *parent = nullptr, Reactor *reactor = new Reactor(0, 20));
     ~ReactorWindow();
 
 private slots:
-    void updateSimulation();
+    void updateGUI();
 
 private:
+    Reactor *reactor;
     QGraphicsView *reactorView;
     QSlider *controlSlider;
     QLabel *powerLabel;
@@ -33,8 +30,6 @@ private:
     QTimer *simulationTimer;
     QChartView *powerChartView;
     QLineSeries *powerSeries;
-    double power;
-    double temperature;
 
     void updatePowerChart(int elapsedTime, double power);
 };

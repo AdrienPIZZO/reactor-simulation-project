@@ -1,10 +1,11 @@
 #include "ReactorWindow.h"
+#include "reactor.h"
 #include <QGraphicsScene>
 #include <QVBoxLayout>
 #include <QValueAxis>
 
-ReactorWindow::ReactorWindow(QWidget *parent)
-    : QMainWindow(parent), power(0), temperature(20) {
+ReactorWindow::ReactorWindow(QWidget *parent, Reactor *reactor)
+    : QMainWindow(parent), reactor(reactor) {
 
     // Control panel
 
@@ -55,7 +56,7 @@ ReactorWindow::ReactorWindow(QWidget *parent)
     setCentralWidget(centralWidget);
 
     simulationTimer = new QTimer(this);
-    connect(simulationTimer, &QTimer::timeout, this, &ReactorWindow::updateSimulation);
+    connect(simulationTimer, &QTimer::timeout, this, &ReactorWindow::updateGUI);
     simulationTimer->start(100);
 }
 
@@ -66,17 +67,15 @@ void ReactorWindow::updatePowerChart(int elapsedTime, double power) {
     powerChartView->chart()->axes(Qt::Horizontal).first()->setRange(0, elapsedTime);
 }
 
-void ReactorWindow::updateSimulation() {
+void ReactorWindow::updateGUI() {
     int position = controlSlider->value();
+    reactor->update(position);
 
-    power = POWER_SCALING * position * position;
-    temperature = TEMP_OFFSET + TEMP_SCALING * power;
-
-    powerLabel->setText(QString("Puissance : %1 MW").arg(power, 0, 'f', 1));
-    temperatureLabel->setText(QString("Température : %1°C").arg(temperature, 0, 'f', 1));
+    powerLabel->setText(QString("Puissance : %1 MW").arg(reactor->getPower(), 0, 'f', 1));
+    temperatureLabel->setText(QString("Température : %1°C").arg(reactor->getTemperature(), 0, 'f', 1));
 
     static int elapsedTime = 0;
     elapsedTime += TIMER_INTERVAL;
 
-    updatePowerChart(elapsedTime, power);
+    updatePowerChart(elapsedTime, reactor->getPower());
 }
