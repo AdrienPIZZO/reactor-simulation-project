@@ -15,7 +15,7 @@ class ReactorWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    ReactorWindow(QWidget *parent = nullptr, Reactor *reactor = new Reactor(0, 20));
+    ReactorWindow(QWidget *parent = nullptr, Reactor *reactor = new Reactor(0, 20, 0));
     ~ReactorWindow();
 
 private slots:

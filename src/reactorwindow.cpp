@@ -55,6 +55,7 @@ ReactorWindow::ReactorWindow(QWidget *parent, Reactor *reactor)
     layout->addWidget(powerChartView);
     setCentralWidget(centralWidget);
 
+    // TODO : do the update in the reactor and put an observer
     simulationTimer = new QTimer(this);
     connect(simulationTimer, &QTimer::timeout, this, &ReactorWindow::updateGUI);
     simulationTimer->start(100);
@@ -69,7 +70,10 @@ void ReactorWindow::updatePowerChart(int elapsedTime, double power) {
 
 void ReactorWindow::updateGUI() {
     int position = controlSlider->value();
-    reactor->update(position);
+    reactor->setControlPosition(position);
+
+    // TO DO : delete this line once the update is in the reactor
+    reactor->update();
 
     powerLabel->setText(QString("Puissance : %1 MW").arg(reactor->getPower(), 0, 'f', 1));
     temperatureLabel->setText(QString("Température : %1°C").arg(reactor->getTemperature(), 0, 'f', 1));

@@ -9,14 +9,17 @@ constexpr double TEMP_SCALING = 0.05;
 class Reactor
 {
 public:
-    Reactor(double power, double temperature);
+    Reactor(double power, double temperature, double controlPosition);
     ~Reactor();
     double getPower() const;
     double getTemperature() const;
-    void update(int controlPosition);
+    double getControlPosition() const;
+    void setControlPosition(double controlPosition);
+    void update();
 private:
     double power;
     double temperature;
+    double controlPosition;
 };
 
 #endif // REACTOR_H
