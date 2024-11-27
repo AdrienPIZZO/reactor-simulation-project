@@ -15,11 +15,8 @@ class ReactorWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    ReactorWindow(QWidget *parent = nullptr, Reactor *reactor = new Reactor(0, 20, 0));
+    ReactorWindow(QWidget *parent = nullptr);
     ~ReactorWindow();
-
-private slots:
-    void updateGUI();
 
 private:
     Reactor *reactor;
@@ -27,10 +24,14 @@ private:
     QSlider *controlSlider;
     QLabel *powerLabel;
     QLabel *temperatureLabel;
-    QTimer *simulationTimer;
     QChartView *powerChartView;
     QLineSeries *powerSeries;
 
+    void setupUI();
     void updatePowerChart(int elapsedTime, double power);
+
+private slots:
+    void updateUI();
 };
+
 #endif // REACTORWINDOW_H

@@ -4,11 +4,17 @@
 #include <QVBoxLayout>
 #include <QValueAxis>
 
-ReactorWindow::ReactorWindow(QWidget *parent, Reactor *reactor)
-    : QMainWindow(parent), reactor(reactor) {
+ReactorWindow::ReactorWindow(QWidget *parent)
+    : QMainWindow(parent), reactor(new Reactor(this)) {
+    setupUI();
+    connect(reactor, &Reactor::dataUpdated, this, &ReactorWindow::updateUI);
+    reactor->startSimulation();
+}
 
+ReactorWindow::~ReactorWindow() {}
+
+void ReactorWindow::setupUI() {
     // Control panel
-
     reactorView = new QGraphicsView(this);
     QGraphicsScene *scene = new QGraphicsScene(this);
     reactorView->setScene(scene);
@@ -24,7 +30,6 @@ ReactorWindow::ReactorWindow(QWidget *parent, Reactor *reactor)
     temperatureLabel->setObjectName("temperatureLabel");
 
     // Chart
-
     powerChartView = new QChartView(new QChart(), this);
     powerChartView->setObjectName("powerChartView");
 
@@ -45,7 +50,6 @@ ReactorWindow::ReactorWindow(QWidget *parent, Reactor *reactor)
     powerSeries->attachAxis(axisY);
 
     // Central widget
-
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     layout->addWidget(reactorView);
@@ -54,26 +58,16 @@ ReactorWindow::ReactorWindow(QWidget *parent, Reactor *reactor)
     layout->addWidget(temperatureLabel);
     layout->addWidget(powerChartView);
     setCentralWidget(centralWidget);
-
-    // TODO : do the update in the reactor and put an observer
-    simulationTimer = new QTimer(this);
-    connect(simulationTimer, &QTimer::timeout, this, &ReactorWindow::updateGUI);
-    simulationTimer->start(100);
 }
-
-ReactorWindow::~ReactorWindow() {}
 
 void ReactorWindow::updatePowerChart(int elapsedTime, double power) {
     powerSeries->append(elapsedTime, power);
     powerChartView->chart()->axes(Qt::Horizontal).first()->setRange(0, elapsedTime);
 }
 
-void ReactorWindow::updateGUI() {
+void ReactorWindow::updateUI() {
     int position = controlSlider->value();
     reactor->setControlPosition(position);
-
-    // TO DO : delete this line once the update is in the reactor
-    reactor->update();
 
     powerLabel->setText(QString("Puissance : %1 MW").arg(reactor->getPower(), 0, 'f', 1));
     temperatureLabel->setText(QString("Température : %1°C").arg(reactor->getTemperature(), 0, 'f', 1));
