@@ -3,13 +3,15 @@
 
 // CONSTRUCTOR
 Reactor::Reactor(QObject *parent, double power, double temperature, double controlPosition)
-    :   QObject(parent),
-        simulationTimer(new QTimer(this)),
-        power(power),
-        temperature(temperature),
-        controlPosition(controlPosition) {
-    connect(simulationTimer, &QTimer::timeout, this, &Reactor::update);
-}
+    : QObject(parent),
+    simulationTimer(new QTimer(this)),
+    power(power),
+    temperature(temperature),
+    controlPosition(controlPosition)
+    {
+        // Connexion du timer pour mettre à jour la simulation
+        connect(simulationTimer, &QTimer::timeout, this, &Reactor::update);
+    }
 
 //DESTRUCTOR
 Reactor::~Reactor() {
@@ -38,8 +40,8 @@ void Reactor::stopSimulation() {
 
 //UPDATE
 void Reactor::update() {
-    power = POWER_SCALING * controlPosition * controlPosition;
-    temperature = TEMP_OFFSET + TEMP_SCALING * power;
+    power += k * (controlPosition - power) - lambda * power;
+    temperature = T_base + alpha * power;
 
     emit dataUpdated(power, temperature);
 }

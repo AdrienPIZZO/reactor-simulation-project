@@ -23,10 +23,12 @@ void ReactorWindow::setupUI() {
     controlSlider->setRange(0, 100);
     controlSlider->setObjectName("controlSlider");
 
-    powerLabel = new QLabel("Puissance : 0 MW", this);
+    QString powerQString = QString("Puissance : %1 MW").arg(reactor->getPower(), 0, 'f', 1);
+    powerLabel = new QLabel(powerQString, this);
     powerLabel->setObjectName("powerLabel");
 
-    temperatureLabel = new QLabel("Température : 20°C", this);
+    QString temperatureQString = QString("Température : %1°C").arg(reactor->getTemperature(), 0, 'f', 1);
+    temperatureLabel = new QLabel(temperatureQString, this);
     temperatureLabel->setObjectName("temperatureLabel");
 
     // Chart
@@ -45,7 +47,7 @@ void ReactorWindow::setupUI() {
 
     QValueAxis *axisY = new QValueAxis();
     axisY->setTitleText("Puissance (MW)");
-    axisY->setRange(0, 1000);
+    axisY->setRange(0, 100);
     powerChartView->chart()->addAxis(axisY, Qt::AlignLeft);
     powerSeries->attachAxis(axisY);
 

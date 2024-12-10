@@ -5,9 +5,6 @@
 #include <QTimer>
 
 constexpr int TIMER_INTERVAL = 100;
-constexpr double POWER_SCALING = 0.1;
-constexpr double TEMP_OFFSET = 20;
-constexpr double TEMP_SCALING = 0.05;
 
 class Reactor : public QObject {
     Q_OBJECT
@@ -31,6 +28,11 @@ private:
     double temperature;
     double controlPosition;
     QTimer *simulationTimer;
+
+    double k = 0.05;       // Power increase factor
+    double lambda = 0.01;  // Natural power decay
+    double alpha = 0.5;    // Power-to-temperature conversion factor
+    double T_base = 20.0;  // Base temperature
 
 private slots:
     void update();
