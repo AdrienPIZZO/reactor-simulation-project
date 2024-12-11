@@ -29,10 +29,11 @@ private:
     double controlPosition;
     QTimer *simulationTimer;
 
-    double k = 0.05;       // Power increase factor
-    double lambda = 0.01;  // Natural power decay
-    double alpha = 0.5;    // Power-to-temperature conversion factor
-    double T_base = 20.0;  // Base temperature
+    const double k = 0.05;       // Power increase factor
+    const double lambda = 0.01;  // Natural power decay
+    const double alpha = 0.07;    // Power-to-temperature conversion factor
+    const double beta = 0.02;        // Heat dissipation factor
+    const double T_environment = 25; // Ambient temperature
 
 private slots:
     void update();

@@ -40,8 +40,12 @@ void Reactor::stopSimulation() {
 
 //UPDATE
 void Reactor::update() {
+    // Update power
     power += k * (controlPosition - power) - lambda * power;
-    temperature = T_base + alpha * power;
+
+    // Update temperature
+    double dT = alpha * power - beta * (temperature - T_environment);
+    temperature += dT;
 
     emit dataUpdated(power, temperature);
 }
