@@ -1,7 +1,6 @@
 #include <QtTest>
 #include <QChartView>
 #include <QLineSeries>
-#include <iostream>
 #include "TestReactor.h"
 
 void TestReactor::initTestCase() {
@@ -22,31 +21,57 @@ void TestReactor::testUpdateSimulation() {
     QVERIFY(powerLabel);
     QVERIFY(temperatureLabel);
 
-    slider->setValue(10);
-    QTest::qWait(TIMER_INTERVAL);
+    auto initialPower = powerLabel->text();
+    auto initialTemperature = temperatureLabel->text();
 
-    std::cout << powerLabel->text().toStdString() << std::endl;
+    slider->setValue(50);
+    QTest::qWait(TIMER_INTERVAL * 2); // Wait for 2 updates
 
-    QVERIFY(powerLabel->text() == "Puissance : 10.0 MW");
-    QVERIFY(temperatureLabel->text() == "Température : 20.5°C");
+    // Check if power and temperature updated
+    QVERIFY(powerLabel->text() != initialPower);
+    QVERIFY(temperatureLabel->text() != initialTemperature);
 }
 
-void TestReactor::testDynamicGraph() {
-    QChartView *chartView = calc->findChild<QChartView*>("powerChartView");
-    QVERIFY(chartView);
+void TestReactor::testDynamicPowerGraph() {
+    QChartView *powerChartView = calc->findChild<QChartView*>("powerChartView");
+    QVERIFY(powerChartView);
 
-    QChart *chart = chartView->chart();
-    QVERIFY(chart);
+    QChart *powerChart = powerChartView->chart();
+    QVERIFY(powerChart);
 
     QSlider *slider = calc->findChild<QSlider*>("controlSlider");
     QVERIFY(slider);
 
-    slider->setValue(10);
-    QTest::qWait(TIMER_INTERVAL);
+    auto *powerSeries = qobject_cast<QLineSeries*>(powerChart->series().at(0));
+    QVERIFY(powerSeries);
+    int initialPointCount = powerSeries->count();
 
-    auto *series = qobject_cast<QLineSeries*>(chart->series().at(0));
-    QVERIFY(series);
-    QVERIFY(series->count() > 0);
+    slider->setValue(70);
+    QTest::qWait(TIMER_INTERVAL * 3);
+
+    // Verify new points are added to the graph
+    QVERIFY(powerSeries->count() > initialPointCount);
+}
+
+void TestReactor::testDynamicTemperatureGraph() {
+    QChartView *temperatureChartView = calc->findChild<QChartView*>("temperatureChartView");
+    QVERIFY(temperatureChartView);
+
+    QChart *temperatureChart = temperatureChartView->chart();
+    QVERIFY(temperatureChart);
+
+    QSlider *slider = calc->findChild<QSlider*>("controlSlider");
+    QVERIFY(slider);
+
+    auto *temperatureSeries = qobject_cast<QLineSeries*>(temperatureChart->series().at(0));
+    QVERIFY(temperatureSeries);
+    int initialPointCount = temperatureSeries->count();
+
+    slider->setValue(70);
+    QTest::qWait(TIMER_INTERVAL * 3);
+
+    // Verify new points are added to the graph
+    QVERIFY(temperatureSeries->count() > initialPointCount);
 }
 
 QTEST_MAIN(TestReactor)

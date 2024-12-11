@@ -12,7 +12,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void testUpdateSimulation();
-    void testDynamicGraph();
+    void testDynamicPowerGraph();
+    void testDynamicTemperatureGraph();
 
 private:
     ReactorWindow *calc;
