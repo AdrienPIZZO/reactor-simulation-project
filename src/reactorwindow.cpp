@@ -31,7 +31,7 @@ void ReactorWindow::setupUI() {
     temperatureLabel = new QLabel(temperatureQString, this);
     temperatureLabel->setObjectName("temperatureLabel");
 
-    // Chart
+    // Power Chart
     powerChartView = new QChartView(new QChart(), this);
     powerChartView->setObjectName("powerChartView");
 
@@ -51,20 +51,52 @@ void ReactorWindow::setupUI() {
     powerChartView->chart()->addAxis(axisY, Qt::AlignLeft);
     powerSeries->attachAxis(axisY);
 
+    // Temperature Chart
+    temperatureChartView = new QChartView(new QChart(), this);
+    temperatureChartView->setObjectName("temperatureChartView");
+
+    temperatureSeries = new QLineSeries();
+    temperatureSeries->setName("Évolution de la température");
+    temperatureChartView->chart()->addSeries(temperatureSeries);
+
+    QValueAxis *axisXTemp = new QValueAxis();
+    axisXTemp->setTitleText("Temps (ms)");
+    axisXTemp->setLabelFormat("%i");
+    temperatureChartView->chart()->addAxis(axisXTemp, Qt::AlignBottom);
+    temperatureSeries->attachAxis(axisXTemp);
+
+    QValueAxis *axisYTemp = new QValueAxis();
+    axisYTemp->setTitleText("Température (°C)");
+    axisYTemp->setRange(0, 350);
+    temperatureChartView->chart()->addAxis(axisYTemp, Qt::AlignLeft);
+    temperatureSeries->attachAxis(axisYTemp);
+
     // Central widget
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+
+    // Chart layout
+    QHBoxLayout *chartLayout = new QHBoxLayout();
+    chartLayout->addWidget(powerChartView);
+    chartLayout->addWidget(temperatureChartView);
+
     layout->addWidget(reactorView);
     layout->addWidget(controlSlider);
     layout->addWidget(powerLabel);
     layout->addWidget(temperatureLabel);
-    layout->addWidget(powerChartView);
+    layout->addLayout(chartLayout);
+
     setCentralWidget(centralWidget);
 }
 
 void ReactorWindow::updatePowerChart(int elapsedTime, double power) {
     powerSeries->append(elapsedTime, power);
     powerChartView->chart()->axes(Qt::Horizontal).first()->setRange(0, elapsedTime);
+}
+
+void ReactorWindow::updateTemperatureChart(int elapsedTime, double temperature) {
+    temperatureSeries->append(elapsedTime, temperature);
+    temperatureChartView->chart()->axes(Qt::Horizontal).first()->setRange(0, elapsedTime);
 }
 
 void ReactorWindow::updateUI() {
@@ -78,4 +110,5 @@ void ReactorWindow::updateUI() {
     elapsedTime += TIMER_INTERVAL;
 
     updatePowerChart(elapsedTime, reactor->getPower());
+    updateTemperatureChart(elapsedTime, reactor->getTemperature());
 }

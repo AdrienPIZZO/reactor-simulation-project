@@ -26,9 +26,12 @@ private:
     QLabel *temperatureLabel;
     QChartView *powerChartView;
     QLineSeries *powerSeries;
+    QChartView *temperatureChartView;
+    QLineSeries *temperatureSeries;
 
     void setupUI();
     void updatePowerChart(int elapsedTime, double power);
+    void updateTemperatureChart(int elapsedTime, double temperature);
 
 private slots:
     void updateUI();
