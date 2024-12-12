@@ -64,7 +64,7 @@ This project is a Qt-based application for simulating and visualizing the operat
 2. Use the slider to adjust reactor control parameters.
 3. Observe real-time updates in the:
    - **Power graph**: Displays power output in megawatts (MW).
-   - **Temperature graph**: Displays reactor core temperature in degrees Celsius (\(\degree\)C).
+   - **Temperature graph**: Displays reactor core temperature in degrees Celsius.
 4. Monitor numerical values for power and temperature below the slider.
 
 ---
@@ -117,9 +117,7 @@ Reactor/
 
 ## Future Improvements
 
-- Add support for saving and loading simulation states.
 - Enhance the physics model with additional reactor parameters.
-- Improve graph interactivity with zoom and pan features.
 - Extend test coverage for edge cases and UI responsiveness.
 
 ---
