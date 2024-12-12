@@ -64,18 +64,29 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 
-# Test
+#TESTS
 enable_testing()
 
-set(TEST_SOURCES
-    tests/TestReactor.cpp
-    tests/TestReactor.h
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test Widgets Charts)
+
+# Test window
+add_executable(QTReactorWindowTests
+    tests/TestReactorWindow.cpp
+    tests/TestReactorWindow.h
     src/reactorwindow.cpp
     src/reactorwindow.h
     src/reactor.cpp
     src/reactor.h
 )
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
-add_executable(QTReactorTests ${TEST_SOURCES})
-target_link_libraries(QTReactorTests PRIVATE Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
+target_link_libraries(QTReactorWindowTests PRIVATE Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
+add_test(NAME QTReactorWindowTests COMMAND QTReactorWindowTests)
+
+# Test reactor
+add_executable(QTReactorTests
+    tests/TestReactor.cpp
+    tests/TestReactor.h
+    src/reactor.cpp
+    src/reactor.h
+)
+target_link_libraries(QTReactorTests PRIVATE Qt${QT_VERSION_MAJOR}::Test)
 add_test(NAME QTReactorTests COMMAND QTReactorTests)

@@ -1,77 +1,45 @@
 #include <QtTest>
-#include <QChartView>
-#include <QLineSeries>
 #include "TestReactor.h"
 
 void TestReactor::initTestCase() {
-    calc = new ReactorWindow();
-    calc->show();
+    reactor = new Reactor(nullptr, 10.0, 25.0, 50.0);
+    reactor->startSimulation();
 }
 
 void TestReactor::cleanupTestCase() {
-    delete calc;
+    delete reactor;
 }
 
-void TestReactor::testUpdateSimulation() {
-    QSlider *slider = calc->findChild<QSlider*>("controlSlider");
-    QLabel *powerLabel = calc->findChild<QLabel*>("powerLabel");
-    QLabel *temperatureLabel = calc->findChild<QLabel*>("temperatureLabel");
-
-    QVERIFY(slider);
-    QVERIFY(powerLabel);
-    QVERIFY(temperatureLabel);
-
-    auto initialPower = powerLabel->text();
-    auto initialTemperature = temperatureLabel->text();
-
-    slider->setValue(50);
-    QTest::qWait(TIMER_INTERVAL * 2); // Wait for 2 updates
-
-    // Check if power and temperature updated
-    QVERIFY(powerLabel->text() != initialPower);
-    QVERIFY(temperatureLabel->text() != initialTemperature);
+void TestReactor::testInitialValues() {
+    QCOMPARE(reactor->getPower(), 10.0);
+    QCOMPARE(reactor->getTemperature(), 25.0);
+    QCOMPARE(reactor->getControlPosition(), 50.0);
 }
 
-void TestReactor::testDynamicPowerGraph() {
-    QChartView *powerChartView = calc->findChild<QChartView*>("powerChartView");
-    QVERIFY(powerChartView);
+void TestReactor::testUpdate() {
+    // Effectuer une mise à jour et vérifier que les valeurs changent
+    double initialPower = reactor->getPower();
+    double initialTemperature = reactor->getTemperature();
 
-    QChart *powerChart = powerChartView->chart();
-    QVERIFY(powerChart);
+    reactor->setControlPosition(70.0); // Simuler un changement de contrôle
+    QTest::qWait(TIMER_INTERVAL * 2);
 
-    QSlider *slider = calc->findChild<QSlider*>("controlSlider");
-    QVERIFY(slider);
-
-    auto *powerSeries = qobject_cast<QLineSeries*>(powerChart->series().at(0));
-    QVERIFY(powerSeries);
-    int initialPointCount = powerSeries->count();
-
-    slider->setValue(70);
-    QTest::qWait(TIMER_INTERVAL * 3);
-
-    // Verify new points are added to the graph
-    QVERIFY(powerSeries->count() > initialPointCount);
+    QVERIFY(reactor->getPower() > initialPower); // La puissance doit augmenter
+    QVERIFY(reactor->getTemperature() > initialTemperature); // La température doit augmenter
 }
 
-void TestReactor::testDynamicTemperatureGraph() {
-    QChartView *temperatureChartView = calc->findChild<QChartView*>("temperatureChartView");
-    QVERIFY(temperatureChartView);
+void TestReactor::testControlPositionEffect() {
+    reactor->startSimulation();
+    // Tester l'effet de la position de contrôle sur la puissance
+    reactor->setControlPosition(0.0);
+    QTest::qWait(TIMER_INTERVAL * 2);
+    double lowControlPower = reactor->getPower();
 
-    QChart *temperatureChart = temperatureChartView->chart();
-    QVERIFY(temperatureChart);
+    reactor->setControlPosition(100.0);
+    QTest::qWait(TIMER_INTERVAL * 2);
+    double highControlPower = reactor->getPower();
 
-    QSlider *slider = calc->findChild<QSlider*>("controlSlider");
-    QVERIFY(slider);
-
-    auto *temperatureSeries = qobject_cast<QLineSeries*>(temperatureChart->series().at(0));
-    QVERIFY(temperatureSeries);
-    int initialPointCount = temperatureSeries->count();
-
-    slider->setValue(70);
-    QTest::qWait(TIMER_INTERVAL * 3);
-
-    // Verify new points are added to the graph
-    QVERIFY(temperatureSeries->count() > initialPointCount);
+    QVERIFY(highControlPower > lowControlPower); // La position de contrôle élevée doit entraîner une puissance plus élevée
 }
 
 QTEST_MAIN(TestReactor)

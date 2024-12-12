@@ -2,7 +2,7 @@
 #define TEST_REACTOR_H
 
 #include <QtTest>
-#include "../src/reactorwindow.h"
+#include "../src/reactor.h"
 
 class TestReactor : public QObject
 {
@@ -11,12 +11,12 @@ class TestReactor : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
-    void testUpdateSimulation();
-    void testDynamicPowerGraph();
-    void testDynamicTemperatureGraph();
+    void testInitialValues();
+    void testUpdate();
+    void testControlPositionEffect();
 
 private:
-    ReactorWindow *calc;
+    Reactor *reactor;
 };
 
-#endif // TEST_REACTOR_H
+#endif // TEST_REACTOR_WINDOW_H
